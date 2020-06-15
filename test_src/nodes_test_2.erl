@@ -10,7 +10,7 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include_lib("eunit/include/eunit.hrl").
--include("common_macros.hrl").
+
 
 
 
@@ -30,10 +30,11 @@
 %% ====================================================================
 %% External functions
 %% ====================================================================
--define(TEST_NODES,[{"node_sthlm_1",'node_sthlm_1@asus'},
-		    {"worker_varmdoe_1",'worker_varmdoe_1@asus'},
-		    {"worker_sthlm_1",'worker_sthlm_1@asus'},
-		    {"worker_sthlm_2",'worker_sthlm_2@asus'}]).
+-define(TEST_NODES,[{"master_sthlm_1",master_sthlm_1@asus},
+		    {"dmz_sthlm_1",dmz_sthlm_1@asus},
+		    {"worker_sthlm_1",worker_sthlm_1@asus},
+		    {"worker_sthlm_2",worker_sthlm_2@asus},
+		    {"worker_sthlm_3",worker_sthlm_3@asus}]).
 %% 
 %% ----------------------------------------------- ---------------------
 %% Function:emulate loader
@@ -91,28 +92,29 @@ check_node_stop(Node,T)->
 %% Returns: non
 %% -------------------------------------------------------------------
 get_config()->
-    ?assertEqual([{"iaas_dir_test",iaas_dir_test@asus},
-		  {"node_sthlm_1",node_sthlm_1@asus},
-		  {"worker_varmdoe_1",worker_varmdoe_1@asus},
+    ?assertEqual([{"master_sthlm_1",master_sthlm_1@asus},
+		  {"dmz_sthlm_1",dmz_sthlm_1@asus},
 		  {"worker_sthlm_1",worker_sthlm_1@asus},
-		  {"worker_sthlm_2",worker_sthlm_2@asus}],iaas_service:get_config()),
+		  {"worker_sthlm_2",worker_sthlm_2@asus},
+		  {"worker_sthlm_3",worker_sthlm_3@asus}],iaas_service:get_config()),
     ok.
 
 available()->
     ?assertEqual([{"iaas_dir_test",iaas_dir_test@asus},
-		 {"node_sthlm_1",node_sthlm_1@asus},
-		 {"worker_varmdoe_1",worker_varmdoe_1@asus},
-		 {"worker_sthlm_1",worker_sthlm_1@asus},
-		 {"worker_sthlm_2",worker_sthlm_2@asus}],iaas_service:available()),
+                      {"master_sthlm_1",master_sthlm_1@asus},
+                      {"dmz_sthlm_1",dmz_sthlm_1@asus},
+                      {"worker_sthlm_1",worker_sthlm_1@asus},
+                      {"worker_sthlm_2",worker_sthlm_2@asus},
+                      {"worker_sthlm_3",worker_sthlm_3@asus}],iaas_service:available()),
     ok.
 
 missing()->
-    stop_node(node_sthlm_1@asus),
-    ?assertEqual([{"node_sthlm_1",node_sthlm_1@asus}],iaas_service:missing()),
-    start_node("node_sthlm_1",node_sthlm_1@asus),
-        ?assertEqual([],iaas_service:missing()),
+    stop_node(worker_sthlm_1@asus),
+    ?assertEqual([{"worker_sthlm_1",worker_sthlm_1@asus}],iaas_service:missing()),
+    start_node("worker_sthlm_1",worker_sthlm_1@asus),
+    ?assertEqual([],iaas_service:missing()),
     ok.
 
 obsolite()->
-    ?assertEqual([],iaas_service:obsolite()),
+    ?assertEqual([{"iaas_dir_test",iaas_dir_test@asus}],iaas_service:obsolite()),
     ok.

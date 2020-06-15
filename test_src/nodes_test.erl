@@ -10,7 +10,6 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include_lib("eunit/include/eunit.hrl").
--include("common_macros.hrl").
 
 
 
@@ -86,12 +85,17 @@ check_node_stop(Node,T)->
 %% Returns: non
 %% -------------------------------------------------------------------
 available()->
-    ?assertEqual([{"iaas_dir_test",iaas_dir_test@asus},
-		 {"node_sthlm_1",node_sthlm_1@asus},
-		 {"worker_varmdoe_1",worker_varmdoe_1@asus},
-		 {"worker_sthlm_1",worker_sthlm_1@asus},
-		 {"worker_sthlm_2",worker_sthlm_2@asus}],nodes:available()),
-    ok.
+    AvailableList=[{"iaas_dir_test",iaas_dir_test@asus},
+                      {"node_sthlm_1",node_sthlm_1@asus},
+                      {"worker_varmdoe_1",worker_varmdoe_1@asus},
+                      {"worker_sthlm_1",worker_sthlm_1@asus},
+                      {"worker_sthlm_2",worker_sthlm_2@asus}],
+    A=nodes:available(),
+    ?assertEqual([],[{NodeId,Node}||{NodeId,Node}<-A,
+				    false==lists:member({NodeId,Node},AvailableList)]),
+    
+				    
+   ok.
 
 missing()->
     stop_node(node_sthlm_1@asus),

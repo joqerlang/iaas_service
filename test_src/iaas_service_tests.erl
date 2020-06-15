@@ -10,7 +10,7 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include_lib("eunit/include/eunit.hrl").
--include("common_macros.hrl").
+
 %% --------------------------------------------------------------------
 
 %% External exports
@@ -35,11 +35,12 @@ cases_test()->
     setup(),
     %% Start application tests
     
+    ?debugMsg("iaas_service node test "),
+    ?assertEqual(ok,nodes_test_2:start()),
+
     ?debugMsg("node test "),
     ?assertEqual(ok,nodes_test:start()),
 
-    ?debugMsg("iaas_service node test "),
-    ?assertEqual(ok,nodes_test_2:start()),
  
     ?debugMsg("Start stop_test_system:start"),
     %% End application tests

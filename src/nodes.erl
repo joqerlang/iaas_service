@@ -11,9 +11,6 @@
 %% Include files
 %% --------------------------------------------------------------------
 
-
--include("common_macros.hrl").
-
 %-compile(export_all).
 -export([available/0,missing/1,obsolite/1,update_config/3]).
 

@@ -10,7 +10,7 @@
 %% --------------------------------------------------------------------
 %% Include files
 %% --------------------------------------------------------------------
--include("common_macros.hrl").
+
 %% --------------------------------------------------------------------
 
 
@@ -24,7 +24,7 @@
 %% --------------------------------------------------------------------
 %% Definitions 
 %% --------------------------------------------------------------------
--define(IAAS_HEARTBEAT,40*1000).
+-define(IAAS_HEARTBEAT,20*1000).
 -define(CONFIG_URL,"https://github.com/joqerlang/node_config.git/").
 -define(CONFIG_DIR,"node_config").
 -define(CONFIG_FILENAME,"node.config").
@@ -92,7 +92,7 @@ heart_beat(Interval)->
 %% --------------------------------------------------------------------
 init([]) ->
     {ok,Config}=nodes:update_config(?CONFIG_URL,?CONFIG_DIR,?CONFIG_FILENAME),
-    [net_kernel:connect_node(Node)||{NodeId,Node}<-Config],  
+    [net_kernel:connect_node(Node)||{_NodeId,Node}<-Config],  
     spawn(fun()->h_beat(?IAAS_HEARTBEAT) end), 
     {ok, #state{config=Config}}.   
     
@@ -151,7 +151,7 @@ handle_call(Request, From, State) ->
 %% -------------------------------------------------------------------
 handle_cast({heart_beat,Interval}, State) ->
     %% Ping all nodes 
-    [net_kernel:connect_node(Node)||{NodeId,Node}<-State#state.config],
+    [net_kernel:connect_node(Node)||{_NodeId,Node}<-State#state.config],
     spawn(fun()->h_beat(Interval) end),    
     {noreply, State};
 
